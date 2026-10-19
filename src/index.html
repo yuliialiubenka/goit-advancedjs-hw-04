@@ -3,12 +3,29 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Vite Starter</title>
+        <title>Image Search</title>
         <link rel="stylesheet" href="./css/styles.css" />
     </head>
     <body>
-        <load src="./partials/starter.html" />
+        <main class="page">
+            <form class="form">
+                <label class="form-label">
+                    <input
+                        class="form-input"
+                        type="text"
+                        name="search-text"
+                        placeholder="Search images..."
+                        required
+                    />
+                </label>
+                <button class="button" type="submit">Search</button>
+            </form>
 
-        <script type="module" src="./js/main.js"></script>
+            <ul class="gallery"></ul>
+            <button class="load-more button" type="button">Load more</button>
+            <div class="loader" aria-label="Loading images" role="status"></div>
+        </main>
+
+        <script type="module" src="./main.js"></script>
     </body>
 </html>
