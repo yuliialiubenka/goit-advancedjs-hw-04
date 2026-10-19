@@ -3,35 +3,31 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Vite Starter</title>
+        <title>Image Search</title>
       <script type="module" crossorigin src="/goit-advancedjs-hw-04/index.js"></script>
-      <link rel="stylesheet" crossorigin href="/goit-advancedjs-hw-04/assets/index-N2SsU5aU.css">
+      <link rel="modulepreload" crossorigin href="/goit-advancedjs-hw-04/assets/vendor-C1DvvBV_.js">
+      <link rel="stylesheet" crossorigin href="/goit-advancedjs-hw-04/assets/vendor-DumFYO8Z.css">
+      <link rel="stylesheet" crossorigin href="/goit-advancedjs-hw-04/assets/index-C8f0KhoI.css">
     </head>
     <body>
-        <main class="starter-page">
-    <section class="starter-card" aria-labelledby="starter-title">
-        <div class="starter-content">
-            <p class="eyebrow">Vanilla JavaScript starter</p>
-            <h1 id="starter-title">Build something great.</h1>
-            <p class="starter-description">A clean Vite foundation for your next website or web application.</p>
-            <div class="starter-actions">
-                <a class="button button-primary" href="https://vitejs.dev/" target="_blank" rel="noreferrer">
-                    Explore Vite
-                </a>
-                <a
-                    class="button button-secondary"
-                    href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Learn JavaScript
-                </a>
-            </div>
-        </div>
-        <img class="starter-image" src="/goit-advancedjs-hw-04/assets/vite-logo-9o_aqrTe.png" alt="Vite logo" width="256" />
-    </section>
-</main>
+        <main class="page">
+            <form class="form">
+                <label class="form-label">
+                    <input
+                        class="form-input"
+                        type="text"
+                        name="search-text"
+                        placeholder="Search images..."
+                        required
+                    />
+                </label>
+                <button class="button" type="submit">Search</button>
+            </form>
 
+            <ul class="gallery"></ul>
+            <button class="load-more button" type="button">Load more</button>
+            <div class="loader" aria-label="Loading images" role="status"></div>
+        </main>
 
     </body>
 </html>
