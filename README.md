@@ -14,6 +14,7 @@ displays the results in a responsive gallery.
 - Open full-size images in a SimpleLightbox modal window.
 - Smoothly scroll the page after loading the next group of images.
 - Preserve the current search query in the page URL.
+- Cancel outdated requests when a new search is submitted.
 
 ## Technologies
 

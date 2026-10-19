@@ -1,3 +1,4 @@
+import axios from "axios";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import { getImagesByQuery } from "./js/pixabay-api.js";
@@ -18,9 +19,20 @@ const PER_PAGE = 15;
 let currentPage = 1;
 let currentQuery = "";
 let totalHits = 0;
+let activeRequestController = null;
+let isLoading = false;
+
+function cancelActiveRequest() {
+    activeRequestController?.abort();
+    activeRequestController = null;
+}
 
 async function searchImages(query) {
+    cancelActiveRequest();
+
     if (!query) {
+        isLoading = false;
+        hideLoader();
         iziToast.warning({
             message: "Please enter a search query.",
             position: "topRight",
@@ -34,9 +46,22 @@ async function searchImages(query) {
     clearGallery();
     hideLoadMoreButton();
     showLoader();
+    isLoading = true;
+
+    const requestController = new AbortController();
+    activeRequestController = requestController;
 
     try {
-        const { hits, totalHits: responseTotalHits } = await getImagesByQuery(query, currentPage);
+        const { hits, totalHits: responseTotalHits } = await getImagesByQuery(
+            query,
+            currentPage,
+            requestController.signal,
+        );
+
+        if (activeRequestController !== requestController) {
+            return;
+        }
+
         totalHits = responseTotalHits;
 
         if (hits.length === 0) {
@@ -50,35 +75,66 @@ async function searchImages(query) {
         createGallery(hits);
         updateLoadMoreButton(hits.length);
     } catch (error) {
+        if (axios.isCancel(error)) {
+            return;
+        }
+
         iziToast.error({
             message: error.message,
             position: "topRight",
         });
     } finally {
-        hideLoader();
+        if (activeRequestController === requestController) {
+            activeRequestController = null;
+            isLoading = false;
+            hideLoader();
+        }
     }
 }
 
 async function loadMoreImages() {
+    if (isLoading) {
+        return;
+    }
+
     currentPage += 1;
     hideLoadMoreButton();
     showLoader();
+    isLoading = true;
+
+    const requestController = new AbortController();
+    activeRequestController = requestController;
 
     try {
-        const { hits } = await getImagesByQuery(currentQuery, currentPage);
+        const { hits } = await getImagesByQuery(currentQuery, currentPage, requestController.signal);
+
+        if (activeRequestController !== requestController) {
+            return;
+        }
 
         createGallery(hits);
         updateLoadMoreButton(hits.length);
         scrollAfterLoading();
     } catch (error) {
-        currentPage -= 1;
-        showLoadMoreButton();
+        if (axios.isCancel(error)) {
+            return;
+        }
+
+        if (activeRequestController === requestController) {
+            currentPage -= 1;
+            showLoadMoreButton();
+        }
+
         iziToast.error({
             message: error.message,
             position: "topRight",
         });
     } finally {
-        hideLoader();
+        if (activeRequestController === requestController) {
+            activeRequestController = null;
+            isLoading = false;
+            hideLoader();
+        }
     }
 }
 
